@@ -5,7 +5,7 @@ require "uri"
 require "json"
 require "dotenv"
 
-Dotenv.load
+Dotenv.load("../.env")
 
 class KizunaBot
   attr_accessor :bot
