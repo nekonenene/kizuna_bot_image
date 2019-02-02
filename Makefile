@@ -5,6 +5,12 @@ LOGGER_PORT := 52350
 RUBY_VER := $(shell cat .ruby-version)
 ENV_FILE_DIR := "."
 
+.PHONY: init
+init:
+	rm -rf log
+	mkdir log
+	cp default.env .env
+
 .PHONY: build
 build:
 	docker build ./ \
