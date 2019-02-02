@@ -9,7 +9,7 @@ ENV_FILE_DIR := "."
 init:
 	rm -rf log
 	mkdir log
-	cp default.env .env
+	cp -i default.env .env
 
 .PHONY: build
 build:
