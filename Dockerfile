@@ -1,7 +1,7 @@
 ARG RUBY_VER="latest"
-ARG ENV_FILE_DIR="."
-
 FROM ruby:${RUBY_VER}
+
+ARG ENV_FILE_DIR="."
 
 WORKDIR /home/repo/src
 
