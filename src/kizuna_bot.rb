@@ -456,6 +456,7 @@ class KizunaBot
       [
         "そうだね！！！",
         "元気いっぱいだねー！！",
+        "うん！！",
       ].sample
     when /？$/
       [
@@ -463,11 +464,18 @@ class KizunaBot
         "わからぬ〜",
         "むずかしい質問だねー",
         "知らなーい",
+        "そうなの？",
       ].sample
     when /help/
       help_message
     else
-      nil
+      [
+        "なるほど〜",
+        "それそれ！！",
+        "ニャンニャン (ﾉ*ФωФ) //",
+        "そうなんだ〜",
+        "うんうん！",
+      ].sample
     end
   end
 
