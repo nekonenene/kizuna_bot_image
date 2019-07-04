@@ -316,12 +316,11 @@ class KizunaBot
   end
 
   def video_search_message(query: nil)
-    return "検索ワードがないよ？ 『/video ねこ』みたいに書いてね！" if query.nil?
-
     video_url = random_video_url_by_query(query: query)
     return "いい動画が見つけられなかったよ、ごめんね" if video_url.nil?
 
-    message  = "『#{query}』の動画を探してきたよ！ ヾﾉ｡ÒㅅÓ)ﾉｼ”\n"
+    message  = (!query.nil? && !query.empty?) ? "『#{query}』の" : "最近の"
+    message += "動画を探してきたよ！ ( ⁎ᵕᴗᵕ⁎ ) :heartbeat:\n"
     message += video_url
   end
 
@@ -345,12 +344,10 @@ class KizunaBot
   end
 
   def random_video_url_by_query(query: nil)
-    return if query.nil?
-
     query_str  = "key=#{YOUTUBE_DATA_API_KEY}"
     query_str += "&part=id"
     query_str += "&type=video"
-    query_str += "&q=#{query}"
+    query_str += "&q=#{query}" if !query.nil? && !query.empty?
     query_str += "&maxResults=50"
     query_str += "&order=date"
     query_str += "&regionCode=JP"
