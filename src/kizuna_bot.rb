@@ -480,6 +480,9 @@ class KizunaBot
         "元気いっぱいだねー！！",
         "うん！！",
       ].sample
+    when /ゆーま.+？$/
+      video_url = random_video_url_by_channel(channel_id: "UC_9DxYZ_4Lhm9ujFvcHryNw")
+      "ゆーまってこの人かな？！ (੭ु ›ω‹ )੭ु⁾⁾ #{video_url}"
     when /？$/
       [
         "そうかも？",
