@@ -120,6 +120,17 @@ class KizunaBot
       event.respond(translate_message(text: text, target_lang: "ja"))
     end
 
+    ### video ###
+    @bot.command [:video, :youtube] do |event, *queries|
+      query = queries.join(" ")
+      event.respond(video_search_message(query: query))
+    end
+
+    @bot.command :vtuber do |event, *queries|
+      query = "VTuber " + queries.join(" ")
+      event.respond(video_search_message(query: query))
+    end
+
     ### help ###
     @bot.command :help do |event|
       event.respond(help_message)
@@ -201,7 +212,8 @@ class KizunaBot
   end
 
   def image_message(query: nil)
-    return "検索ワードがないよ？" if query.nil?
+    return "検索ワードがないよ？ 『/image ねこ』みたいに書いてね！" if query.nil?
+
     query.gsub!(/(,|、)/, " ")
     max_count = 10 # 10件が最大の様子
 
@@ -303,6 +315,16 @@ class KizunaBot
     message += "「#{response.body}」 これでどうかな？ σ(．_．@)"
   end
 
+  def video_search_message(query: nil)
+    return "検索ワードがないよ？ 『/video ねこ』みたいに書いてね！" if query.nil?
+
+    video_url = random_video_url_by_query(query: query)
+    return "いい動画が見つけられなかったよ、ごめんね" if video_url.nil?
+
+    message  = "『#{query}』の動画を探してきたよ！ ヾﾉ｡ÒㅅÓ)ﾉｼ”\n"
+    message += video_url
+  end
+
   def random_video_url_by_channel(channel_id: nil)
     return if channel_id.nil?
 
@@ -311,6 +333,27 @@ class KizunaBot
     query_str += "&channelId=#{channel_id}"
     query_str += "&maxResults=50"
     query_str += "&order=date"
+
+    encoded_query = URI.encode(query_str)
+
+    response = RestClient.get("#{YOUTUBE_DATA_API_HOST}/search?#{encoded_query}")
+    res_json = JSON.parse(response)
+    items = res_json["items"]
+    video_id = items.sample.dig("id", "videoId")
+
+    "https://www.youtube.com/watch?v=#{video_id}"
+  end
+
+  def random_video_url_by_query(query: nil)
+    return if query.nil?
+
+    query_str  = "key=#{YOUTUBE_DATA_API_KEY}"
+    query_str += "&part=id"
+    query_str += "&type=video"
+    query_str += "&q=#{query}"
+    query_str += "&maxResults=50"
+    query_str += "&order=date"
+    query_str += "&regionCode=JP"
 
     encoded_query = URI.encode(query_str)
 
