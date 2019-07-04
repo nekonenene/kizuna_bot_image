@@ -27,6 +27,9 @@ class KizunaBot
   CUSTOM_SEARCH_ENGINE_ID = ENV["CUSTOM_SEARCH_ENGINE_ID"].freeze
   CUSTOM_SEARCH_API_KEY = ENV["CUSTOM_SEARCH_API_KEY"].freeze
 
+  YOUTUBE_DATA_API_HOST = "https://www.googleapis.com/youtube/v3".freeze
+  YOUTUBE_DATA_API_KEY = ENV["YOUTUBE_DATA_API_KEY"].freeze
+
   RANK_TOTAL_COUNT = 200 # 発言数集計のために取得する件数
 
   GOOGLE_TRANSLATE_API_HOST = "https://script.google.com/macros/s/AKfycbzX3hgwpkCG-q-47nvu9CpeGXJ2uoQVbAngwNpbHjx6jCiOMXE/exec".freeze
@@ -298,6 +301,25 @@ class KizunaBot
 
     message  = "翻訳してみたよ！\n"
     message += "「#{response.body}」 これでどうかな？ σ(．_．@)"
+  end
+
+  def random_video_url_by_channel(channel_id: nil)
+    return if channel_id.nil?
+
+    query_str  = "key=#{YOUTUBE_DATA_API_KEY}"
+    query_str += "&part=id"
+    query_str += "&channelId=#{channel_id}"
+    query_str += "&maxResults=50"
+    query_str += "&order=date"
+
+    encoded_query = URI.encode(query_str)
+
+    response = RestClient.get("#{YOUTUBE_DATA_API_HOST}/search?#{encoded_query}")
+    res_json = JSON.parse(response)
+    items = res_json["items"]
+    video_id = items.sample.dig("id", "videoId")
+
+    "https://www.youtube.com/watch?v=#{video_id}"
   end
 
   def help_message
