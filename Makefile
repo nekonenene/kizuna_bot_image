@@ -32,6 +32,7 @@ stop:
 .PHONY: run_dev
 run_dev:
 	docker run -it --rm --name $(APP_CONTAINER_NAME) \
+		-v $(shell pwd)/src:/home/repo/src \
 		--log-driver fluentd \
 		--log-opt fluentd-address=localhost:$(LOGGER_PORT) \
 		kizuna_bot:latest
