@@ -459,13 +459,17 @@ class KizunaBot
         "うん！！",
       ].sample
     when /？$/
-      [
-        "そうかも？",
-        "わからぬ〜",
-        "むずかしい質問だねー",
-        "知らなーい",
-        "そうなの？",
-      ].sample
+      if event.content.match(/ゆーま(.+)？/)
+        "ゆーま！知ってるVtuberだ！"
+      else  
+        [
+          "そうかも？",
+          "わからぬ〜",
+          "むずかしい質問だねー",
+          "知らなーい",
+          "そうなの？",
+        ].sample
+      end
     when /help/
       help_message
     else
@@ -475,6 +479,7 @@ class KizunaBot
         "ニャンニャン (ﾉ*ФωФ) //",
         "そうなんだ〜",
         "うんうん！",
+        "なになにー？",
       ].sample
     end
   end
