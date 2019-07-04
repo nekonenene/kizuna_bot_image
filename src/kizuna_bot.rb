@@ -371,6 +371,8 @@ class KizunaBot
     message += "/rank : 最近ヒマそうにしてる人を教えてあげるね :kiss_ww:\n"
     message += "/eng : 英語でなんて言うのかがんばって翻訳するよ！ :capital_abcd:\n"
     message += "/jap : 日本語でどう言うのか考えるよ！ :flag_jp:\n"
+    message += "/video, /youtube : YouTubeから動画を探してくるよ！ 「/video ゲーム実況」みたいに使ってね :arrow_forward:\n"
+    message += "/vtuber : VTuberさんの動画を探してくるよ！ :dancer:\n"
     message += "/ping : テスト用だよ\n"
     message += "/help : これだよ\n"
   end
