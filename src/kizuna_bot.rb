@@ -329,6 +329,7 @@ class KizunaBot
 
     query_str  = "key=#{YOUTUBE_DATA_API_KEY}"
     query_str += "&part=id"
+    query_str += "&type=video"
     query_str += "&channelId=#{channel_id}"
     query_str += "&maxResults=50"
     query_str += "&order=date"
