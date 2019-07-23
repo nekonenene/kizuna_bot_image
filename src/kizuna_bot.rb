@@ -339,6 +339,7 @@ class KizunaBot
     response = RestClient.get("#{YOUTUBE_DATA_API_HOST}/search?#{encoded_query}")
     res_json = JSON.parse(response)
     items = res_json["items"]
+    return nil if items.empty?
     video_id = items.sample.dig("id", "videoId")
 
     "https://www.youtube.com/watch?v=#{video_id}"
@@ -358,6 +359,7 @@ class KizunaBot
     response = RestClient.get("#{YOUTUBE_DATA_API_HOST}/search?#{encoded_query}")
     res_json = JSON.parse(response)
     items = res_json["items"]
+    return nil if items.empty?
     video_id = items.sample.dig("id", "videoId")
 
     "https://www.youtube.com/watch?v=#{video_id}"
