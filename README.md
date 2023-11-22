@@ -25,12 +25,6 @@ make build
 でコンテナ作成。
 
 ```sh
-make fluentd
-```
-
-で fluentd を立ち上げておいたあと、
-
-```sh
 make run_dev
 ```
 
