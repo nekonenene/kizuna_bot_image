@@ -57,13 +57,13 @@ class KizunaBot
     end
 
     ### Ping ###
-    @bot.command :ping do |event|
+    @bot.command(:ping) do |event|
       m = event.respond("Pong！")
       m.edit "Pong！ 応答までに #{Time.now - event.timestamp} 秒かかったよ！"
     end
 
     ### ニュース ###
-    @bot.command :news do |event|
+    @bot.command(:news) do |event|
       event.respond(news_message)
     end
 
@@ -73,17 +73,17 @@ class KizunaBot
       event.respond(weather_message)
     end
 
-    @bot.command :weather do |event|
+    @bot.command(:weather) do |event|
       event.respond(weather_message)
     end
 
     ### サイコロ ###
-    @bot.command :dice do |event, max|
+    @bot.command(:dice) do |event, max|
       event.respond(dice_message(max: max))
     end
 
     ### 料理屋さん検索 ###
-    @bot.command [:gourmet, :gurume, :grm] do |event, address, keyword|
+    @bot.command(:gourmet, aliases: [:gurume, :grm]) do |event, address, keyword|
       event.respond(gourmet_message(address: address, keyword: keyword))
     end
 
@@ -98,41 +98,41 @@ class KizunaBot
     end
 
     ### image ###
-    @bot.command [:image, :img] do |event, *queries|
+    @bot.command(:image, aliases: [:img]) do |event, *queries|
       query = queries.join(" ")
       event.respond(image_message(query: query))
     end
 
     ### rank ###
-    @bot.command [:rank] do |event|
+    @bot.command(:rank) do |event|
       channel = event.channel # Discordrb::Channel
       event.respond(user_rank_message(channel: channel))
     end
 
     ### translate ###
-    @bot.command [:eng] do |event, *queries|
+    @bot.command(:eng) do |event, *queries|
       text = queries.join(" ")
       event.respond(translate_message(text: text, target_lang: "en"))
     end
 
-    @bot.command [:jpn, :jap] do |event, *queries|
+    @bot.command(:jpn, aliases: [:jap]) do |event, *queries|
       text = queries.join(" ")
       event.respond(translate_message(text: text, target_lang: "ja"))
     end
 
     ### video ###
-    @bot.command [:video, :youtube] do |event, *queries|
+    @bot.command(:video, aliases: [:youtube]) do |event, *queries|
       query = queries.join(" ")
       event.respond(video_search_message(query: query))
     end
 
-    @bot.command :vtuber do |event, *queries|
+    @bot.command(:vtuber) do |event, *queries|
       query = "VTuber " + queries.join(" ")
       event.respond(video_search_message(query: query))
     end
 
     ### help ###
-    @bot.command :help do |event|
+    @bot.command(:help) do |event|
       event.respond(help_message)
     end
   end
