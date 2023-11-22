@@ -139,7 +139,7 @@ class KizunaBot
 
   def news_message
     max_links = 50 # このRSSの最大は 30 件の様子
-    encoded_rss_url = URI.encode(HATENA_HOTENTRY_RSS)
+    encoded_rss_url = URI.encode_www_form_component(HATENA_HOTENTRY_RSS)
     uri = URI.parse("#{RSS2JSON_API_HOST}?rss_url=#{encoded_rss_url}&api_key=#{RSS2JSON_API_KEY}&count=#{max_links}")
     response = Net::HTTP.get_response(uri)
     res_json = JSON.parse(response.body)
@@ -189,15 +189,15 @@ class KizunaBot
     keyword.gsub!(/(,|、)/, " ") unless keyword.nil?
     max_count = 100
 
-    query_str  = "key=#{RECRUIT_API_KEY}"
-    query_str += "&address=#{address}"
-    query_str += "&keyword=#{keyword}" unless keyword.nil?
-    query_str += "&count=#{max_count}"
-    query_str += "&format=json"
+    query_str = URI.encode_www_form(
+      key: RECRUIT_API_KEY,
+      address: address,
+      keyword: keyword,
+      count: max_count,
+      format: "json",
+    )
 
-    encoded_query = URI.encode(query_str)
-
-    uri = URI.parse("#{HOT_PEPPER_API_HOST}?#{encoded_query}")
+    uri = URI.parse("#{HOT_PEPPER_API_HOST}?#{query_str}")
     response = Net::HTTP.get_response(uri)
     res_json = JSON.parse(response.body)
 
@@ -212,21 +212,21 @@ class KizunaBot
   end
 
   def image_message(query: nil)
-    return "検索ワードがないよ？ 『/image ねこ』みたいに書いてね！" if query.nil?
+    return "検索ワードがないよ？ 『/image ねこ』みたいに書いてね！" if query.nil? || query.empty?
 
     query.gsub!(/(,|、)/, " ")
     max_count = 10 # 10件が最大の様子
 
-    query_str  = "key=#{CUSTOM_SEARCH_API_KEY}"
-    query_str += "&cx=#{CUSTOM_SEARCH_ENGINE_ID}"
-    query_str += "&q=#{query}"
-    query_str += "&hl=ja"
-    query_str += "&searchType=image"
-    query_str += "&num=#{max_count}"
+    query_str = URI.encode_www_form(
+      key: CUSTOM_SEARCH_API_KEY,
+      cx: CUSTOM_SEARCH_ENGINE_ID,
+      q: query,
+      hl: "ja",
+      searchType: "image",
+      num: max_count,
+    )
 
-    encoded_query = URI.encode(query_str)
-
-    uri = URI.parse("#{CUSTOM_SEARCH_API_HOST}?#{encoded_query}")
+    uri = URI.parse("#{CUSTOM_SEARCH_API_HOST}?#{query_str}")
     response = Net::HTTP.get_response(uri)
     res_json = JSON.parse(response.body)
 
@@ -304,12 +304,12 @@ class KizunaBot
     return if text.nil?
     target_lang ||= "en"
 
-    query_str  = "text=#{text}"
-    query_str += "&target=#{target_lang}"
+    query_str = URI.encode_www_form(
+      text: text,
+      target: target_lang,
+    )
 
-    encoded_query = URI.encode(query_str)
-
-    response = RestClient.get("#{GOOGLE_TRANSLATE_API_HOST}?#{encoded_query}")
+    response = RestClient.get("#{GOOGLE_TRANSLATE_API_HOST}?#{query_str}")
 
     message  = "翻訳してみたよ！\n"
     message += "「#{response.body}」 これでどうかな？ σ(．_．@)"
@@ -327,17 +327,18 @@ class KizunaBot
   def random_video_url_by_channel(channel_id: nil)
     return if channel_id.nil?
 
-    query_str  = "key=#{YOUTUBE_DATA_API_KEY}"
-    query_str += "&part=id"
-    query_str += "&type=video"
-    query_str += "&channelId=#{channel_id}"
-    query_str += "&maxResults=50"
-    query_str += "&order=date"
+    query_str = URI.encode_www_form(
+      key: YOUTUBE_DATA_API_KEY,
+      part: "id",
+      type: "video",
+      channelId: channel_id,
+      maxResults: 50,
+      order: "date",
+    )
 
-    encoded_query = URI.encode(query_str)
-
-    response = RestClient.get("#{YOUTUBE_DATA_API_HOST}/search?#{encoded_query}")
+    response = RestClient.get("#{YOUTUBE_DATA_API_HOST}/search?#{query_str}")
     res_json = JSON.parse(response)
+
     items = res_json["items"]
     return nil if items.empty?
     video_id = items.sample.dig("id", "videoId")
@@ -346,18 +347,19 @@ class KizunaBot
   end
 
   def random_video_url_by_query(query: nil)
-    query_str  = "key=#{YOUTUBE_DATA_API_KEY}"
-    query_str += "&part=id"
-    query_str += "&type=video"
-    query_str += "&q=#{query}" if !query.nil? && !query.empty?
-    query_str += "&maxResults=50"
-    query_str += "&order=date"
-    query_str += "&regionCode=JP"
+    query_str = URI.encode_www_form(
+      key: YOUTUBE_DATA_API_KEY,
+      part: "id",
+      type: "video",
+      q: query.empty? ? nil : query,
+      maxResults: 50,
+      order: "date",
+      regionCode: "JP",
+    )
 
-    encoded_query = URI.encode(query_str)
-
-    response = RestClient.get("#{YOUTUBE_DATA_API_HOST}/search?#{encoded_query}")
+    response = RestClient.get("#{YOUTUBE_DATA_API_HOST}/search?#{query_str}")
     res_json = JSON.parse(response)
+
     items = res_json["items"]
     return nil if items.empty?
     video_id = items.sample.dig("id", "videoId")
